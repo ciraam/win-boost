@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "steps": [
+    {
+      "step": "move",
+      "passed": true,
+      "detail": "3 profils OK, 38 jeux, 6 catégories nettoyage, Named Pipe IPC sécurisé=true"
+    },
+    {
+      "step": "act",
+      "passed": true,
+      "detail": "Whitelist & validation IPC/registre OK, MoveFileExW=true, crash-recovery=true, Ping IPv4/IPv6=true"
+    },
+    {
+      "step": "hud",
+      "passed": true,
+      "detail": "Direct2D/DirectWrite=true, CPU 35.0 %, RAM 11.7/15.8 Go, 342 processus, plan « Utilisation normale », RAM proc 35.1 Mo"
+    }
+  ]
+}

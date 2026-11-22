@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "values": [
+    {
+      "name": "auto boost poll interval",
+      "group": "detection",
+      "value": 2500,
+      "unit": "ms",
+      "source": "user specification (2-3s lightweight polling)"
+    },
+    {
+      "name": "background cpu budget",
+      "group": "performance",
+      "value": 1.0,
+      "unit": "%",
+      "source": "user specification (< 1% CPU)"
+    },
+    {
+      "name": "background ram budget",
+      "group": "performance",
+      "value": 50,
+      "unit": "MB",
+      "source": "user specification (< 50 MB RAM)"
+    },
+    {
+      "name": "max safe game cpu priority",
+      "group": "cpu",
+      "value": "High",
+      "source": "user specification (never Realtime)"
+    },
+    {
+      "name": "min logical cores for core 0 exclusion",
+      "group": "cpu",
+      "value": 4,
+      "unit": "cores",
+      "estimated": true
+    },
+    {
+      "name": "default standby purge threshold",
+      "group": "ram",
+      "value": 2048,
+      "unit": "MB",
+      "estimated": true
+    },
+    {
+      "name": "standby purge cooldown",
+      "group": "ram",
+      "value": 60,
+      "unit": "s",
+      "estimated": true
+    },
+    {
+      "name": "qos dscp value",
+      "group": "network",
+      "value": 46,
+      "source": "RFC 3246 Expedited Forwarding"
+    },
+    {
+      "name": "icmp ping packet count",
+      "group": "network",
+      "value": 4,
+      "unit": "packets",
+      "estimated": true
+    },
+    {
+      "name": "pause monitoring in tray",
+      "group": "monitoring",
+      "value": true,
+      "source": "user specification (zero impact in game)"
+    }
+  ]
+}
