@@ -67,7 +67,7 @@ use crate::whitelist::immutable_whitelist_summary;
 use crate::win32_ops::{self, SingleInstanceGuard, WinServiceState, MAIN_WINDOW_TITLE};
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PALETTE OLED / CYBER-TACTIQUE
+// PALETTE CRAFT.RO DESIGN SYSTEM (Linear / Raycast / Setapp)
 // ═══════════════════════════════════════════════════════════════════════════
 const fn rgba(r: u8, g: u8, b: u8, a: f32) -> D2D1_COLOR_F {
     D2D1_COLOR_F {
@@ -78,21 +78,22 @@ const fn rgba(r: u8, g: u8, b: u8, a: f32) -> D2D1_COLOR_F {
     }
 }
 
-const BG_OLED: D2D1_COLOR_F = rgba(11, 15, 23, 1.0); // #0B0F17
-const BG_SIDEBAR: D2D1_COLOR_F = rgba(14, 19, 29, 1.0); // #0E131D
-const BG_CARD: D2D1_COLOR_F = rgba(18, 24, 38, 1.0); // #121826
-const BG_CARD_ELEVATED: D2D1_COLOR_F = rgba(24, 32, 50, 1.0); // #182032
-const BG_CARD_ACTIVE_BOOST: D2D1_COLOR_F = rgba(12, 30, 32, 1.0);
-const BORDER_SUBTLE: D2D1_COLOR_F = rgba(30, 41, 59, 1.0); // #1E293B
-const BORDER_BRIGHT: D2D1_COLOR_F = rgba(51, 65, 85, 1.0); // #334155
-const TEXT_PRIMARY: D2D1_COLOR_F = rgba(241, 245, 249, 1.0); // #F1F5F9
-const TEXT_SECONDARY: D2D1_COLOR_F = rgba(148, 163, 184, 1.0); // #94A3B8
-const TEXT_DARK: D2D1_COLOR_F = rgba(8, 20, 16, 1.0);
-const ACCENT_EMERALD: D2D1_COLOR_F = rgba(0, 229, 176, 1.0); // #00E5B0
-const ACCENT_CYAN: D2D1_COLOR_F = rgba(56, 189, 248, 1.0); // #38BDF8
-const ACCENT_INDIGO: D2D1_COLOR_F = rgba(129, 140, 248, 1.0); // #818CF8
-const ACCENT_AMBER: D2D1_COLOR_F = rgba(245, 158, 11, 1.0); // #F59E0B
-const ACCENT_CRIMSON: D2D1_COLOR_F = rgba(244, 63, 94, 1.0); // #F43F5E
+const BG_OLED: D2D1_COLOR_F = rgba(11, 12, 14, 1.0); // #0B0C0E (--background)
+const BG_SIDEBAR: D2D1_COLOR_F = rgba(17, 18, 21, 1.0); // #111215 (--sidebar)
+const BG_CARD: D2D1_COLOR_F = rgba(22, 24, 29, 1.0); // #16181D (--card)
+const BG_CARD_ELEVATED: D2D1_COLOR_F = rgba(28, 31, 38, 1.0); // #1C1F26 (Surface Hover)
+const BG_CARD_ACTIVE_BOOST: D2D1_COLOR_F = rgba(16, 28, 26, 1.0);
+const BORDER_SUBTLE: D2D1_COLOR_F = rgba(255, 255, 255, 0.08); // Hairline 1px Craft.ro
+const BORDER_BRIGHT: D2D1_COLOR_F = rgba(255, 255, 255, 0.16); // Hover / Focus Craft.ro
+const BORDER_ZENITHAL: D2D1_COLOR_F = rgba(255, 255, 255, 0.04); // Reflet supérieur interne
+const TEXT_PRIMARY: D2D1_COLOR_F = rgba(244, 245, 247, 1.0); // #F4F5F7 (--foreground)
+const TEXT_SECONDARY: D2D1_COLOR_F = rgba(138, 143, 152, 1.0); // #8A8F98 (--muted-foreground)
+const TEXT_DARK: D2D1_COLOR_F = rgba(11, 12, 14, 1.0);
+const ACCENT_EMERALD: D2D1_COLOR_F = rgba(16, 185, 129, 1.0); // #10B981 (Succès)
+const ACCENT_CYAN: D2D1_COLOR_F = rgba(56, 189, 248, 1.0); // #38BDF8 (Info)
+const ACCENT_INDIGO: D2D1_COLOR_F = rgba(94, 106, 210, 1.0); // #5E6AD2 (Primaire Craft.ro)
+const ACCENT_AMBER: D2D1_COLOR_F = rgba(245, 158, 11, 1.0); // #F59E0B (Avertissement)
+const ACCENT_CRIMSON: D2D1_COLOR_F = rgba(229, 72, 77, 1.0); // #E5484D (Destructif)
 
 const TIMER_ANIM_ID: usize = 1;
 const TIMER_POLL_ID: usize = 2;
@@ -1295,6 +1296,32 @@ impl NativeUiState {
 
         let header_h = 58.0;
         let sidebar_w = 224.0;
+
+        // Halo atmosphérique discret Craft.ro en haut du canvas
+        if let Some(halo_indigo) = solid_brush(rt, with_alpha(ACCENT_INDIGO, 0.045)) {
+            unsafe {
+                rt.FillEllipse(
+                    &D2D1_ELLIPSE {
+                        point: pt(sidebar_w + (w - sidebar_w) * 0.5, header_h - 40.0),
+                        radiusX: 340.0,
+                        radiusY: 130.0,
+                    },
+                    &halo_indigo,
+                );
+            }
+        }
+        if let Some(halo_sky) = solid_brush(rt, with_alpha(ACCENT_CYAN, 0.025)) {
+            unsafe {
+                rt.FillEllipse(
+                    &D2D1_ELLIPSE {
+                        point: pt(w * 0.88, header_h - 20.0),
+                        radiusX: 240.0,
+                        radiusY: 110.0,
+                    },
+                    &halo_sky,
+                );
+            }
+        }
 
         // 1. Barre supérieure
         self.draw_top_header(rt, w, header_h);
@@ -3305,6 +3332,17 @@ fn fill_rounded_card(
         unsafe {
             rt.FillRoundedRectangle(&rr, &fb);
         }
+    }
+    if radius >= 8.0 && (r.right - r.left) > radius * 2.0 {
+        draw_line(
+            rt,
+            r.left + radius * 0.6,
+            r.top + 1.0,
+            r.right - radius * 0.6,
+            r.top + 1.0,
+            BORDER_ZENITHAL,
+            1.0,
+        );
     }
     if let Some(sb) = solid_brush(rt, border) {
         unsafe {
